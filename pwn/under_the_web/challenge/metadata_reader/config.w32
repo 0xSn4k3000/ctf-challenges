@@ -1,0 +1,7 @@
+ARG_ENABLE('metadata_reader', 'metadata_reader support', 'no');
+
+if (PHP_METADATA_READER != 'no') {
+	AC_DEFINE('HAVE_METADATA_READER', 1, 'metadata_reader support enabled');
+
+	EXTENSION('metadata_reader', 'metadata_reader.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}

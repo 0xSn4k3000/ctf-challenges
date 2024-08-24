@@ -1,0 +1,41 @@
+package com.linkedchat;
+import java.io.*;
+
+public class utils {
+    
+    public static class ResecObj implements Serializable {
+        private String PublicKey, NewPublicKey, newSymKey;
+
+        public String getNewSymKey() {
+            return newSymKey;
+        }
+
+        public String getPublicKey() {
+            return PublicKey;
+        }
+
+        public String getNewPublicKey() {
+            return NewPublicKey;
+        }
+
+
+        public void setNewPublicKey(String key) {
+            NewPublicKey = key;
+        }
+        public void setPublicKey(String key) {
+            this.PublicKey = key;
+        }
+
+        public void setSymKey(String key) {
+            System.out.println("[+] RCE Achived");
+            this.newSymKey = key;
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            ois.defaultReadObject();
+            transientField = (FieldType)(Class.forName(nonTransientString).newInstance());
+            System.out.println("[+] RCE 2 Achived");
+        }
+
+    }
+}

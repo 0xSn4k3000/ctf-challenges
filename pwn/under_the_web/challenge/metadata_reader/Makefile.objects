@@ -1,0 +1,9 @@
+-include metadata_reader.dep
+metadata_reader.lo: /home/santoryu/Desktop/ctf/own_challs/pwn/under_web/metadata_reader/metadata_reader.c
+	$(LIBTOOL) --mode=compile $(CC) -I. -I/home/santoryu/Desktop/ctf/own_challs/pwn/under_web/metadata_reader $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)   -DZEND_COMPILE_DL_EXT=1 -c /home/santoryu/Desktop/ctf/own_challs/pwn/under_web/metadata_reader/metadata_reader.c -o metadata_reader.lo  -MMD -MF metadata_reader.dep -MT metadata_reader.lo
+$(phplibdir)/metadata_reader.la: ./metadata_reader.la
+	$(LIBTOOL) --mode=install cp ./metadata_reader.la $(phplibdir)
+
+./metadata_reader.la: $(shared_objects_metadata_reader) $(METADATA_READER_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) -shared $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS)  -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_metadata_reader) $(METADATA_READER_SHARED_LIBADD)
+

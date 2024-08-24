@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steel Mountain Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+    }
+    .sidebar {
+      background-color: #1c1c1c;
+    }
+    .card {
+      background-color: #1c1c1c;
+      border: 1px solid #333333;
+      color: #ffffff;
+    }
+    .card-header {
+      background-color: #333333;
+      border-bottom: 1px solid #444444;
+      color: #ffffff;
+    }
+
+    .safe {
+      border: 2px solid green;
+    }
+
+    @keyframes warning-border {
+      0% {
+        border-color: red;
+      }
+      50% {
+        border-color: transparent;
+      }
+      100% {
+        border-color: red;
+      }
+    }
+
+    .warning {
+      border: 2px solid red;
+      animation: warning-border 2s infinite;
+    }
+
+    @keyframes in_service-border {
+      0% {
+        border-color: #3333ff;
+      }
+      50% {
+        border-color: transparent;
+      }
+      100% {
+        border-color: #3333ff;
+      }
+    }
+
+    .in_service {
+      border: 2px solid #3333ff;
+      animation: in_service-border 3s infinite;
+    }
+
+    
+    .card {
+      overflow: hidden;
+    }
+
+    .up::before,
+    .up::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        background-color: #00f;
+        animation: moveUp 2s linear infinite;
+    }
+
+    .up::before {
+        left: 0;
+    }
+
+    .up::after {
+        right: 0;
+    }
+
+    @keyframes moveUp {
+            0% {
+                top: 200%; /* Start below the card */
+                opacity: 1; /* Fully visible */
+            }
+            90% {
+                top: 0; /* Move up to the top */
+                opacity: 1; /* Still fully visible */
+            }
+            100% {
+                top: -100%; /* Move beyond the top */
+                opacity: 0; /* Fade out */
+            }
+    }
+
+    .down::before,
+    .down::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        background-color: #00f;
+        animation: moveDown 2s linear infinite;
+        opacity: 1; /* Initially fully visible */
+    }
+
+    .down::before {
+        left: 0;
+    }
+
+    .down::after {
+        right: 0;
+    }
+
+    @keyframes moveDown {
+        0% {
+            top: -100%; /* Start above the card */
+            opacity: 1; /* Fully visible */
+        }
+        10% {
+            top: 0; /* Move down to the bottom */
+            opacity: 1; /* Still fully visible */
+        }
+        100% {
+            top: 200%; /* Move beyond the bottom */
+            opacity: 0; /* Fade out */
+        }
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block sidebar">
+        <div class="position-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active text-light" aria-current="page" href="#">
+                <span data-feather="home"></span>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <span data-feather="thermometer"></span>
+                Temperature
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <span data-feather="wind"></span>
+                Air Quality
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <span data-feather="door-open"></span>
+                Doors
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <span data-feather="box"></span>
+                Elevators
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="#">
+                <span data-feather="wind"></span>
+                Air Conditioning
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Dashboard</h1>
+        </div>
+
+        <!-- Temperature Sensors Section -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="card" id="therm1-card">
+              <div class="card-header">
+                <i>&#x1F321;</i> Level One Temperature Sensor 
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="Therm1"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card" id="therm2-card">
+              <div class="card-header">
+                <i class="animated-thermometer">&#x1F321;</i> Level Two Temperature Sensor
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="Therm2"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card" id="therm3-card">
+              <div class="card-header">
+                <i class="animated-thermometer">&#x1F321;</i> Level Three Temperature Sensor
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="Therm3"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Air Handling Units Section -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="animated-air">&#x1F32C;</i> Roof Air Handling Unit 1
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="Ahu1"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <i class="animated-air" >&#x1F32C;</i> Roof Air Handling Unit 2
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="Ahu2"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doors Section -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="card" id="dr-1-card">
+              <div class="card-header">
+                <i class="animated-door">&#x1F6AA;</i> Lobby Door
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="dr-1"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card" id="dr-2-card">
+              <div class="card-header">
+                <i class="animated-door">&#x1F6AA;</i> Tape Storage Room Door
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="dr-2"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card" id="dr-3-card">
+              <div class="card-header">
+                <i class="animated-door">&#x1F6AA;</i> Servers Room Door
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="dr-3"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Elevators Section -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="card" id="ele-1-card">
+              <div class="card-header">
+                <i class="animated-elevator">&#x1F6D7;</i> Elevator 1
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="ele-1"></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card" id="ele-2-card">
+              <div class="card-header">
+                <i class="animated-elevator">&#x1F6D7;</i> Elevator 2
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="ele-2"></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Air Conditioning Units Section -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <i class="animated-ac">&#x1F4A8;</i> Air Conditioning Level 1
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="ac-1">Status: On</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <i class="animated-ac">&#x1F4A8;</i> Air Conditioning Level 2
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="ac-2">Status: On</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <i class="animated-ac">&#x1F4A8;</i> Air Conditioning Level 3
+              </div>
+              <div class="card-body">
+                <h5 class="card-title" id="ac-3">Status: On</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Alert</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="Msg">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <script>
+
+        var myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"));
+
+        function launchModal(string) {
+            var msg = document.getElementById("Msg");
+            msg.innerHTML = string;
+            myModal.show();
+        }
+
+        
+
+        function update() {
+            let Temp = {
+              "L1":[0, 0, 0],
+              "L2":[0, 0, 0],
+              "L3":[0, 0, 0]
+            }
+
+            let AHU = {
+              "AHU1":"",
+              "AHU2":""
+            }
+
+            let Doors = {
+              "l": ["", 0],
+              "tsr": ["", 0],
+              "sr": ["", 0]
+            }
+
+            let ELE = {
+              1: [0, "", 0],
+              2: [0, "", 0], 
+            }
+            
+            let AC = {
+              1: 0,
+              2: 0,
+              3: 0,
+            }
+
+            fetch('/data')
+            .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                Object.keys(data).forEach(key => {
+                    if(key.startsWith("Message")){
+                      if(data[key].Description != ""){  
+                          if(!myModal._isShown){
+                            launchModal(data[key].Description);
+                          }    
+                      }
+                    }
+                  // Temp
+                    else if(key.startsWith("Temp-L1")) {
+                      Temp["L1"][0] = data[key].presentValue;
+                    } else if(key.startsWith("Temp-L2")) {
+                      Temp["L2"][0] = data[key].presentValue;
+                    } else if(key.startsWith("Temp-L3")) {
+                      Temp["L3"][0] = data[key].presentValue;
+                    } 
+                  // Therm setpoint
+                    else if(key.startsWith("Therm-L1")) {
+                      Temp["L1"][1] = data[key].presentValue;
+                    } else if(key.startsWith("Therm-L2")) {
+                      Temp["L2"][1] = data[key].presentValue;
+                    } else if(key.startsWith("Therm-L3")) {
+                      Temp["L3"][1] = data[key].presentValue;
+                    }
+                  // Over Heat
+                    else if(key.startsWith("OHAP-L1")) {
+                      Temp["L1"][2] = data[key].presentValue;
+                    } else if(key.startsWith("OHAP-L2")) {
+                      Temp["L2"][2] = data[key].presentValue;
+                    } else if(key.startsWith("OHAP-L3")) {
+                      Temp["L3"][2] = data[key].presentValue;
+                    }
+
+                  // Ahu
+                    else if(key.startsWith("AHU1")) {
+                      if(data[key].presentValue == 0) {
+                        AHU["AHU1"] = "Off";
+                      } else if(data[key].presentValue == 1) {
+                        AHU["AHU1"] = "On <br><br> Mode: Cooling";
+                      } else if(data[key].presentValue == 2) {
+                        AHU["AHU1"] = "On <br><br> Mode: Warming";
+                      } else {
+                        AHU["AHU1"] = "Unknown";
+                      }
+                    } else if(key.startsWith("AHU2")) {
+                      if(data[key].presentValue == 0) {
+                        AHU["AHU2"] = "Off";
+                      } else if(data[key].presentValue == 1) {
+                        AHU["AHU2"] = "On <br><br> Mode: Cooling";
+                      } else if(data[key].presentValue == 2) {
+                        AHU["AHU2"] = "On <br><br> Mode: Warming";
+                      } else {
+                        AHU["AHU2"] = "Unknown";
+                      }
+                    }
+
+                    // Doors
+                    if(key.startsWith("L1-LOBBY")) {
+                      if(data[key].presentValue == 0) {
+                        Doors["l"][0] = "Open <br><br> Lock: -";
+                      } else if(data[key].presentValue == 1) {
+                        Doors["l"][0] = "Closed <br><br> Lock: UnLocked";
+                      } else if(data[key].presentValue == 2) {
+                        Doors["l"][0] = "Closed <br><br> Lock: Locked";
+                        Doors["l"][1] = 1;
+                      } else {
+                        Doors["l"][0] = "Unknown";
+                      }
+                    } else if(key.startsWith("L2-TSR")) {
+                      if(data[key].presentValue == 0) {
+                        Doors["tsr"][0] = "Open <br><br> Lock: -";
+                      } else if(data[key].presentValue == 1) {
+                        Doors["tsr"][0] = "Closed <br><br> Lock: UnLocked";
+                      } else if(data[key].presentValue == 2) {
+                        Doors["tsr"][0] = "Closed <br><br> Lock: Locked";
+                        Doors["tsr"][1] = 1;
+                      } else {
+                        Doors["tsr"][0] = "Unknown";
+                      }
+                    } else if(key.startsWith("L3-SR")) {
+                      if(data[key].presentValue == 0) {
+                        Doors["sr"][0] = "Open <br><br> Lock: -";
+                      } else if(data[key].presentValue == 1) {
+                        Doors["sr"][0] = "Closed <br><br> Lock: UnLocked";
+                      } else if(data[key].presentValue == 2) {
+                        Doors["sr"][0] = "Closed <br><br> Lock: Locked";
+                        Doors["sr"][1] = 1;
+                      } else {
+                        Doors["sr"][0] = "Unknown";
+                      }
+                    }
+
+                    // Elevators
+                    else if(key.startsWith("ELE-1")) {
+                      if(key.startsWith("ELE-1-CF")) {
+                        ELE[1][0] = data[key].presentValue;
+                      } else if(key.startsWith("ELE-1-STAT")) {
+                        if(data[key].presentValue == 0) {
+                          ELE[1][1] = "Stop";
+                        } else if(data[key].presentValue == 1) {
+                          ELE[1][1] = "Moving up";
+                        } else if(data[key].presentValue == 2) {
+                          ELE[1][1] = "Moving down";
+                        }
+                      } else if(key.startsWith("ELE-1-TF")) {
+                        ELE[1][2] = data[key].presentValue;
+                      }
+                    } 
+                    else if(key.startsWith("ELE-2")) {
+                      if(key.startsWith("ELE-2-CF")) {
+                        ELE[2][0] = data[key].presentValue;
+                      } else if(key.startsWith("ELE-2-STAT")) {
+                        if(data[key].presentValue == 0) {
+                          ELE[2][1] = "Stop";
+                        } else if(data[key].presentValue == 1) {
+                          ELE[2][1] = "Moving up";
+                        } else if(data[key].presentValue == 2) {
+                          ELE[2][1] = "Moving down";
+                        }
+                      } else if(key.startsWith("ELE-2-TF")) {
+                        ELE[2][2] = data[key].presentValue;
+                      }
+                    }
+
+                    // AC
+                    else if(key.startsWith("ACS-L1")) {
+                      AC[1] = data[key].presentValue;
+                    } else if(key.startsWith("ACS-L2")) {
+                      AC[2] = data[key].presentValue;
+                    } else if(key.startsWith("ACS-L3")) {
+                      AC[3] = data[key].presentValue;
+                    }
+
+
+                });
+
+
+                // Temp
+                document.getElementById("Therm1").innerHTML = "Current Temperature: " + Temp["L1"][0] + "°C <br><br> Set Point: " + Temp["L1"][1] + "°C <br><br> OH: " + Temp["L1"][2] + "°C";
+                if(Temp["L1"][0] > Temp["L1"][2]) {
+                    document.getElementById("therm1-card").classList.add("warning");
+                } else {
+                    if (document.getElementById("therm1-card").classList.contains("warning")) {
+                      document.getElementById("therm1-card").classList.remove("warning");
+                    }
+                }
+
+                document.getElementById("Therm2").innerHTML = "Current Temperature: " + Temp["L2"][0] + "°C <br><br> Set Point: " + Temp["L2"][1] + "°C <br><br> OH: " + Temp["L2"][2] + "°C";
+                if(Temp["L2"][0] > Temp["L2"][2]) {
+                    document.getElementById("therm2-card").classList.add("warning");
+                } else {
+                    if (document.getElementById("therm2-card").classList.contains("warning")) {
+                      document.getElementById("therm2-card").classList.remove("warning");
+                    }
+                }
+                
+                
+                document.getElementById("Therm3").innerHTML = "Current Temperature: " + Temp["L3"][0] + "°C <br><br> Set Point: " + Temp["L3"][1] + "°C <br><br> OH: " + Temp["L3"][2] + "°C";
+                if(Temp["L3"][0] > Temp["L3"][2]) {
+                    document.getElementById("therm3-card").classList.add("warning");
+                } else {
+                    if (document.getElementById("therm3-card").classList.contains("warning")) {
+                      document.getElementById("therm3-card").classList.remove("warning");
+                    }
+                }
+
+                // Ahu
+                document.getElementById("Ahu1").innerHTML = "Status: " + AHU["AHU1"];
+                document.getElementById("Ahu2").innerHTML = "Status: " + AHU["AHU2"];
+
+
+                // Doors
+                document.getElementById("dr-1").innerHTML = Doors["l"][0];
+                if(Doors["l"][0].startsWith("Open")) {
+                  document.getElementById("dr-1-card").classList.add("in_service");
+                } else {
+                  if (document.getElementById("dr-1-card").classList.contains("in_service")) {
+                    document.getElementById("dr-1-card").classList.remove("in_service");
+                  }
+                }
+
+
+                document.getElementById("dr-2").innerHTML = Doors["tsr"][0];
+                if(Doors["tsr"][1] == 1) {
+                  document.getElementById("dr-2-card").classList.add("safe");
+                }
+
+                document.getElementById("dr-3").innerHTML = Doors["sr"][0];
+                
+                if(Doors["sr"][1] == 1) {
+                  if (document.getElementById("dr-3-card").classList.contains("warning")) {
+                    document.getElementById("dr-3-card").classList.remove("warning");
+                  }
+                  document.getElementById("dr-3-card").classList.add("safe");
+
+                } else if (Doors["sr"][1] == 0) {
+                  if (document.getElementById("dr-3-card").classList.contains("safe")) {
+                    document.getElementById("dr-3-card").classList.remove("safe");
+                  }
+                  document.getElementById("dr-3-card").classList.add("warning");
+                }
+
+
+                // Elevators
+                let e1card = document.getElementById("ele-1-card");
+
+                document.getElementById("ele-1").innerHTML = "Current Floor: Level " + ELE[1][0] + " <br><br> Status: " + ELE[1][1] + "<br><br> Moving to: Level " + ELE[1][2];
+                if(ELE[1][1].startsWith("Moving up")) {
+                  if(e1card.classList.contains("down")) {
+                    e1card.classList.remove("down")
+                  }
+                  e1card.classList.add("up");
+                } else if(ELE[1][1].startsWith("Moving down")) {
+                  if(e1card.classList.contains("up")) {
+                    e1card.classList.remove("up")
+                  }
+                  e1card.classList.add("down")
+                } else {
+                  if(e1card.classList.contains("up")) {
+                    e1card.classList.remove("up")
+                  } else if(e1card.classList.contains("down")) {
+                    e1card.classList.remove("down")
+                  }
+                }
+
+                let e2card = document.getElementById("ele-2-card");
+
+                document.getElementById("ele-2").innerHTML = "Current Floor: Level " + ELE[2][0] + " <br><br> Status: " + ELE[2][1] + "<br><br> Moving to: Level " + ELE[2][2];
+                if(ELE[2][1].startsWith("Moving up")) {
+                  if(e2card.classList.contains("down")) {
+                    e2card.classList.remove("down")
+                  }
+                  e2card.classList.add("up");
+                } else if(ELE[2][1].startsWith("Moving down")) {
+                  if(e2card.classList.contains("up")) {
+                    e2card.classList.remove("up")
+                  }
+                  e2card.classList.add("down")
+                } else {
+                  if(e2card.classList.contains("up")) {
+                    e2card.classList.remove("up")
+                  } else if(e2card.classList.contains("down")) {
+                    e2card.classList.remove("down")
+                  }
+                }
+
+                // AC
+                document.getElementById("ac-1").innerHTML = "Status: " + ((AC[1] === 0) ? "OFF" : "ON");
+                document.getElementById("ac-2").innerHTML = "Status: " + ((AC[2] === 0) ? "OFF" : "ON");
+                document.getElementById("ac-3").innerHTML = "Status: " + ((AC[3] === 0) ? "OFF" : "ON");
+
+
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+
+
+        setInterval(update, 2000); // 2000 milliseconds = 2 seconds
+
+        document.addEventListener('DOMContentLoaded', update);
+
+  </script>
+
+</body>
+</html>
